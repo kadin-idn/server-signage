@@ -5,18 +5,14 @@ const { Authorization } = require("../middlewares/autthorization");
 const fileUpload = require("express-fileupload");
 const HeroBanner = express.Router();
 
-HeroBanner.get("/", (req, res) => {
-  res.send("Hello World!");
-});
 HeroBanner.use(
   fileUpload({
-    limits: { fileSize: 50 * 1024 * 1024 }, // Batas ukuran file 50MB
+    limits: { fileSize: 100 * 1024 * 1024 }, 
     abortOnLimit: true,
     responseOnLimit: "File size limit has been reached",
   })
 );
-HeroBanner.post(
-  "/",
-  ControllerHeroBanner.createHeroBanner
-);
+HeroBanner.get("/", ControllerHeroBanner.getAllHeroBanner);
+HeroBanner.post("/", ControllerHeroBanner.createHeroBanner);
+HeroBanner.get("/:date", ControllerHeroBanner.getAllHeroBannerByDate);
 module.exports = HeroBanner;

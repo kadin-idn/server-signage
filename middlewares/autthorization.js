@@ -2,11 +2,9 @@ const { User, Role } = require("../models");
 const Authorization = async (req, res, next) => {
   try {
     const { id, role } = req.user;
-    // console.log(req.user);
     const verifyUser = await User.findByPk(id);
-    if (!verifyUser) {
-      throw { name: "Unauthorized" };
-    }
+    if (!verifyUser) throw { name: "Unauthorized" };
+    
     if (role === "admin" || role === "superAdmin") {
       next();
     } else {
@@ -24,13 +22,11 @@ const Authorization = async (req, res, next) => {
 const AuthSuperAdmin = async (req, res, next) => {
   try {
     const { id, role } = req.user;
-    // console.log(req.user);
     const verifyUser = await User.findByPk(id);
-    if (!verifyUser) {
-      throw { name: "Unauthorized" };
-    }
+    if (!verifyUser) throw { name: "Unauthorized" };
+    
     const findRole = await Role.findByPk(role);
-    if (role === "superAdmin") {
+    if (findRole.name === "superAdmin") {
       next();
     } else {
       res.status(401).json({ message: "Unauthorized" });

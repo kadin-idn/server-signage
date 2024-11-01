@@ -5,8 +5,6 @@ const { Op } = require("sequelize");
 class ControllerSchedule {
   static async getAllSchedule(req, res) {
     try {
-      console.log("ini schedule");
-      
       const { filterDay, filterRoomId } = req.query;
       const startOfDay = moment(filterDay).startOf("day").toDate(); // Awal hari
       const endOfDay = moment(filterDay).endOf("day").toDate(); // Akhir hari
