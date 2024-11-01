@@ -6,10 +6,6 @@ const Role = require("./role");
 const Room = require("./room");
 const ControllerUser = require("../controllers/user");
 const Authentication = require("../middlewares/authentication");
-const {
-  Authorization,
-  AuthSuperAdmin,
-} = require("../middlewares/autthorization");
 const router = express.Router();
 
 router.post("/login", ControllerUser.Login);

@@ -4,9 +4,8 @@ const Authentication = require("../middlewares/authentication");
 const { AuthSuperAdmin } = require("../middlewares/autthorization");
 const User = express.Router();
 
-User.get("/", (req, res) => {
-  res.send("User Route");
-});
+
+User.get("/", ControllerUser.GetAllUser);
 User.post("/", Authentication, AuthSuperAdmin, ControllerUser.AddUser);
 User.delete("/:id", Authentication, AuthSuperAdmin, ControllerUser.DeleteUser);
 
