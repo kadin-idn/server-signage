@@ -7,9 +7,7 @@
  * npx sequelize-cli model:generate --name Schedule --attributes day:string,startTime:date,endTime:date,status:string,RoomId:uuid,UpdatedBy:uuid,CreatedBy:uuid
  */
 
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config();
-}
+if (process.env.NODE_ENV !== "production") require("dotenv").config();
 const express = require('express');
 const router = require('./routes');
 const cors = require('cors');

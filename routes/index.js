@@ -14,10 +14,10 @@ const router = express.Router();
 
 router.post("/login", ControllerUser.Login);
 
-router.use("/heroBanner", Authentication, Authorization, HeroBanner);
-router.use("/user", Authentication, AuthSuperAdmin, User);
-router.use("/schedule", Authentication, Authorization, Schedule);
-router.use("/role", Authentication, Role);
-router.use("/room", Authentication, Room);
+router.use("/heroBanner", HeroBanner);
+router.use("/user", User);
+router.use("/schedule", Schedule);
+router.use("/role", Role);
+router.use("/room", Room);
 
 module.exports = router;
