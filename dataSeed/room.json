@@ -1,0 +1,14 @@
+[
+  { "name": "MAIN HALL" },
+  { "name": "ARENA" },
+  { "name": "STAGE" },
+  { "name": "SALON D" },
+  { "name": "WASHROOM" },
+  { "name": "PARKING" },
+  { "name": "TUC SHOP" },
+  { "name": "LOUNGE" },
+  { "name": "ADMIN OFFICE" },
+  { "name": "TICKETS" },
+  { "name": "SECURITY" },
+  { "name": "LOST & FOUND" }
+]
