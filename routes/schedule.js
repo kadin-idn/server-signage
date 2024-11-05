@@ -18,5 +18,12 @@ Schedule.patch(
   Authorization,
   ControllerSchedule.updateScheduleById
 );
+Schedule.get("/:id", Authentication,Authorization,ControllerSchedule.getScheduleById);
+Schedule.delete(
+  "/:id",
+  Authentication,
+  Authorization,
+  ControllerSchedule.deleteScheduleById
+);
 
 module.exports = Schedule;

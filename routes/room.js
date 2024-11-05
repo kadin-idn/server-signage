@@ -6,5 +6,6 @@ const Room = express.Router();
 
 Room.get("/", Authentication ,ControllerRoom.getAllRoom);
 Room.post("/", Authentication , Authorization, ControllerRoom.createRoom);
+Room.delete("/:id", Authentication , Authorization, ControllerRoom.deleteRoom);
 
 module.exports = Room;

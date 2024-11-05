@@ -25,6 +25,20 @@ class ControllerRoom {
       }
     }
   }
+  static async deleteRoom(req, res) {
+    const id = req.params.id;
+    try {
+      const data = await Room.destroy({ where: { id } });
+      if (data === 0) {
+        res.status(404).json({ message: "Room not found" });
+      } else {
+        res.status(200).json({ message: "Room deleted" });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 }
 
 module.exports = ControllerRoom;

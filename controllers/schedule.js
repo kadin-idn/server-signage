@@ -109,6 +109,10 @@ class ControllerSchedule {
       const startOfDay = moment(day).startOf("day").toDate(); // Awal hari
       const endOfDay = moment(day).endOf("day").toDate(); // Akhir hari
       const schedule = await Schedule.findAll({
+        include: {
+          model: Room,
+          attributes: { exclude: ["createdAt", "updatedAt", "id"] },
+        },
         where: {
           [Op.and]: [
             {
@@ -166,6 +170,37 @@ class ControllerSchedule {
         });
       } else if (error.name === "RoomNotFound") {
         res.status(400).json({ message: "Room not found" });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  }
+  static async getScheduleById(req, res) {
+    const { id } = req.params;
+    try {
+      const schedule = await Schedule.findByPk(id);
+      if (!schedule) throw { name: "ScheduleNotFound" };
+      res.status(200).json(schedule);
+    } catch (error) {
+      console.log(error);
+      if (error.name === "ScheduleNotFound") {
+        res.status(404).json({ message: "Schedule not found" });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  }
+  static async deleteScheduleById(req, res) {
+    const { id } = req.params;
+    try {
+      const schedule = await Schedule.findByPk(id);
+      if (!schedule) throw { name: "ScheduleNotFound" };
+      await schedule.destroy();
+      res.status(200).json({ message: `Schedule for ${schedule.name} has been deleted` });
+    } catch (error) {
+      console.log(error);
+      if (error.name === "ScheduleNotFound") {
+        res.status(404).json({ message: "Schedule not found" });
       } else {
         res.status(500).json({ message: "Internal server error" });
       }
