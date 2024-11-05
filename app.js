@@ -11,12 +11,23 @@ if (process.env.NODE_ENV !== "production") require("dotenv").config();
 const express = require('express');
 const router = require('./routes');
 const cors = require('cors');
+const fileUpload = require("express-fileupload");
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true, limit: 10485760 }));
+app.use(fileUpload({
+  limits: { fileSize: 100 * 1024 * 1024 }, 
+  abortOnLimit: true,
+  responseOnLimit: "File size limit has been reached",
+  debug:true
+}))
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ 
+  extended: true, 
+  limit: '100mb',
+  parameterLimit: 100000 
+}));
 app.use("/", router)
 
 

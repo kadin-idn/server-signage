@@ -6,6 +6,7 @@ class ControllerHeroBanner {
       const { title, description, startTime, endTime } = req.body;
       if (!req.files) throw { name: "FileIsEmpty" };
       const file = req.files.fileHero;
+      console.log(file);
       if (!file) throw { name: "FileIsEmpty" };
       const newFile = await File.create({
         fileName: file.name,
