@@ -12,5 +12,11 @@ Schedule.post(
   ControllerSchedule.addSchedule
 );
 Schedule.get("/:day", ControllerSchedule.getScheduleByDay);
+Schedule.patch(
+  "/:id",
+  Authentication,
+  Authorization,
+  ControllerSchedule.updateScheduleById
+);
 
 module.exports = Schedule;

@@ -11,7 +11,7 @@ class ControllerSchedule {
       let paramsquery = {
         include: {
           model: Room,
-          attributes: { exclude: ["createdAt", "updatedAt"] },
+          attributes: { exclude: ["createdAt", "updatedAt", "id"] },
         },
         attributes: {
           exclude: ["createdAt", "updatedAt", "RoomId"],
@@ -56,7 +56,7 @@ class ControllerSchedule {
   static async addSchedule(req, res) {
     try {
       const { id } = req.user;
-      const { name, day, startTime, endTime, RoomId } = req.body;
+      const { name, day, startTime, endTime, RoomId, deptName, picName } = req.body;
 
       const findRoom = await Room.findByPk(RoomId);
       if (!findRoom) throw { name: "RoomNotFound" };
@@ -67,9 +67,8 @@ class ControllerSchedule {
           where: { startTime, endTime },
         });
 
-        if (findScheduleByTime)
-          throw { name: "TheTimeSlotIsAlreadyBookedForAnotherEvent." };
-        throw { name: "ThisRoomAlreadyHasAnEventScheduled" };
+        if (findScheduleByTime) throw { name: "TheTimeSlotIsAlreadyBookedForAnotherEvent." };
+        // throw { name: "ThisRoomAlreadyHasAnEventScheduled" };
       }
 
       const schedule = await Schedule.create({
@@ -80,10 +79,12 @@ class ControllerSchedule {
         RoomId,
         UpdatedBy: id,
         CreatedBy: id,
+        deptName,
+        picName,
       });
-      const dateOnly = moment(schedule.day).format("MMM Do YY");
+      // const dateOnly = moment(schedule.day).format("MMM Do YY");
       res.status(201).json({
-        message: `The schedule for ${dateOnly}, has been successfully created.`,
+        message: `The schedule for ${schedule.name}, has been successfully created.`,
       });
     } catch (error) {
       console.log(error);
@@ -130,6 +131,47 @@ class ControllerSchedule {
       res.status(500).json({ message: "Internal server error" });
     }
   }
+  static async updateScheduleById(req, res) {
+    const { id } = req.params;
+    const { name, day, startTime, endTime, RoomId, deptName, picName } = req.body;
+    try {
+      const findSchedule = await Schedule.findByPk(id);
+      if (!findSchedule) throw { name: "ScheduleNotFound" };
+      const findRoom = await Room.findByPk(RoomId);
+      if (!findRoom) throw { name: "RoomNotFound" };
+
+      // const findScheduleByTime = await Schedule.findOne({
+      //   where: { startTime, endTime },
+      // });
+
+      // if (findScheduleByTime) throw { name: "TheTimeSlotIsAlreadyBookedForAnotherEvent." };
+
+      await findSchedule.update({
+        name,
+        day,
+        startTime,
+        endTime,
+        RoomId,
+        deptName,
+        picName,
+      });
+      res.status(200).json({ message: `Schedule for ${findSchedule.name} has been updated` });
+    } catch (error) {
+      console.log(error);
+      if (error.name === "ScheduleNotFound") {
+        res.status(404).json({ message: "Schedule not found" });
+      } else if (error.name === "TheTimeSlotIsAlreadyBookedForAnotherEvent.") {
+        res.status(400).json({
+          message: "The time slot is already booked for another event",
+        });
+      } else if (error.name === "RoomNotFound") {
+        res.status(400).json({ message: "Room not found" });
+      } else {
+        res.status(500).json({ message: "Internal server error" });
+      }
+    }
+  }
 }
+
 
 module.exports = ControllerSchedule;

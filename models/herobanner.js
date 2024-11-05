@@ -25,7 +25,7 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     description: DataTypes.STRING,
     startTime: DataTypes.DATE,
-    endTime: DataTypes.DATE
+    endTime: DataTypes.DATE,
   }, {
     sequelize,
     modelName: 'HeroBanner',

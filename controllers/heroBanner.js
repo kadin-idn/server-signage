@@ -19,16 +19,7 @@ class ControllerHeroBanner {
         endTime,
         fileHero: newFile.id,
       });
-      //   return new Promise((resolve, reject) => {
-      //     file.mv(path, function (err) {
-      //       if (err) {
-      //         reject(err);
-      //       } else {
-      //         resolve();
-      //       }
-      //     });
-      //   });
-      // };
+
       res.status(201).json({ message: "Hero Banner created" });
     } catch (error) {
       console.log(error);
@@ -42,11 +33,6 @@ class ControllerHeroBanner {
   static async getAllHeroBanner(req, res) {
     try {
       const heroBanner = await HeroBanner.findAll({
-        include: {
-          model: File,
-          as: "fileHeroBanner",
-          attributes: ["id","fileName", "fileType"],
-        },
         attributes:{exclude : ["createdAt", "updatedAt"]}
       });
       res.status(200).json(heroBanner);
@@ -86,11 +72,6 @@ class ControllerHeroBanner {
           endTime: {
             [Op.gte]: parsedDate,
           },
-        },
-        include: {
-          model: File,
-          as: "fileHeroBanner",
-          attributes: ["id", "fileName", "fileType"],
         },
         attributes: { exclude: ["createdAt", "updatedAt"] },
       });

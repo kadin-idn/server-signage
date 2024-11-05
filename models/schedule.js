@@ -29,6 +29,8 @@ module.exports = (sequelize, DataTypes) => {
         key: 'id'
       }
     },
+    deptName: DataTypes.STRING,
+    picName: DataTypes.STRING,
     UpdatedBy: {
       type: DataTypes.UUID,
       allowNull: false,

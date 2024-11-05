@@ -28,6 +28,12 @@ module.exports = {
           key: 'id'
         }
       },
+      deptName: {
+        type: Sequelize.STRING
+      },
+      picName: {
+        type: Sequelize.STRING
+      },
       UpdatedBy: {
         type: Sequelize.UUID,
         references: {

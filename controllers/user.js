@@ -56,6 +56,7 @@ class ControllerUser {
         throw { name: "UserNotFound" };
       }
       const access_token = generateToken(user, user.Role.name);
+      console.log("ini udah berhasil login");
       res.status(200).json(access_token);
     } catch (error) {
       if (error.name === "UserNotFound") {
