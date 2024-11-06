@@ -1,5 +1,7 @@
+const { emitBanner } = require("../config/socket-io");
 const { HeroBanner, File } = require("../models");
 const { Op } = require("sequelize");
+const moment = require("moment");
 class ControllerHeroBanner {
   static async createHeroBanner(req, res) {
     try {
@@ -20,7 +22,7 @@ class ControllerHeroBanner {
         endTime,
         fileHero: newFile.id,
       });
-
+      emitBanner();
       res.status(201).json({ message: "Hero Banner created" });
     } catch (error) {
       console.log(error);
@@ -45,12 +47,18 @@ class ControllerHeroBanner {
   static async deleteHeroBanner(req, res) {
     try {
       const { id } = req.params;
-      const result = await HeroBanner.destroy({
+      const findBanner = await HeroBanner.findByPk(id);
+      await HeroBanner.destroy({
         where: {
           id,
         },
       });
-      if (result === 0) throw { name: "DataNotFound" };
+      await File.destroy({
+        where: {
+          id: findBanner.fileHero,
+        },
+      });
+      emitBanner();
       res.status(200).json({ message: "Hero Banner deleted" });
     } catch (error) {
       console.log(error);
@@ -64,7 +72,15 @@ class ControllerHeroBanner {
   static async getAllHeroBannerByDate(req, res) {
     try {
       const { date } = req.params;
-      const parsedDate = new Date(date)
+      const parsedDate = new Date(date) 
+      // console.log(parsedDate.toISOString(), "<<<<<<<<<<");
+      
+      console.log(parsedDate, "<<<<<<<<<< ini banner");
+      console.log(date, "<<<<<<<<<<");
+      // console.log(moment(date).startOf("day").toDate());
+      
+      
+      
       const heroBanner = await HeroBanner.findAll({
         where: {
           startTime: {

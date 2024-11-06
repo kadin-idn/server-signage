@@ -13,34 +13,17 @@ const router = require("./routes");
 const cors = require("cors");
 const fileUpload = require("express-fileupload");
 const http = require("http");
-const { Server } = require("socket.io");
+const socketIo = require("socket.io");
+const ControllerSchedule = require("./controllers/schedule");
+const { socketConnection } = require("./config/socket-io");
 const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(cors());
-const server = http.createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:3001",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-app.get("/trigger-reload", (req, res) => {
-  console.log("API /trigger-reload hit");
-  // Broadcast a "reload" event to all connected clients
-  io.emit("reload");
-  res.send("Reload event triggered");
-});
-io.on("connection", (socket) => {
-  console.log("Client connected:", socket.id);
+const server = http.createServer(app); // Create an HTTP server
+socketConnection(server); // Initialize socket.io
 
-  // socket.emit("timeUpdate", new Date());
 
-  socket.on("disconnect", () => {
-    console.log("Client disconnected:", socket.id);
-  });
-});
 // setInterval(() => {
 //   io.emit("timeUpdate", new Date());
 // }, 300000);
@@ -62,8 +45,8 @@ app.use(
 );
 app.use("/", router);
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
 
-module.exports = app;
+// module.exports = app;

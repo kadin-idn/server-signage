@@ -1,6 +1,7 @@
 const { Schedule, Room } = require("../models");
 const moment = require("moment");
 const { Op } = require("sequelize");
+const { emitSchedule } = require("../config/socket-io");
 
 class ControllerSchedule {
   static async getAllSchedule(req, res) {
@@ -83,6 +84,7 @@ class ControllerSchedule {
         picName,
       });
       // const dateOnly = moment(schedule.day).format("MMM Do YY");
+      emitSchedule();
       res.status(201).json({
         message: `The schedule for ${schedule.name}, has been successfully created.`,
       });
@@ -106,8 +108,10 @@ class ControllerSchedule {
   static async getScheduleByDay(req, res) {
     try {
       const { day } = req.params;
-      const startOfDay = moment(day).startOf("day").toDate(); // Awal hari
-      const endOfDay = moment(day).endOf("day").toDate(); // Akhir hari
+      const startOfDay = moment(day).startOf("day").toDate();
+      const endOfDay = moment(day).endOf("day").toDate(); 
+      console.log(day, startOfDay, endOfDay, "<<<<<<<<<< ini schedule");
+      
       const schedule = await Schedule.findAll({
         include: {
           model: Room,
@@ -129,6 +133,8 @@ class ControllerSchedule {
         },
         order: [["startTime", "ASC"]],
       });
+      // console.log(schedule);
+      
       res.status(200).json(schedule);
     } catch (error) {
       console.log(error);
@@ -159,6 +165,7 @@ class ControllerSchedule {
         deptName,
         picName,
       });
+      emitSchedule();
       res.status(200).json({ message: `Schedule for ${findSchedule.name} has been updated` });
     } catch (error) {
       console.log(error);
@@ -196,6 +203,7 @@ class ControllerSchedule {
       const schedule = await Schedule.findByPk(id);
       if (!schedule) throw { name: "ScheduleNotFound" };
       await schedule.destroy();
+      emitSchedule();
       res.status(200).json({ message: `Schedule for ${schedule.name} has been deleted` });
     } catch (error) {
       console.log(error);
