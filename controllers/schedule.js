@@ -7,8 +7,10 @@ class ControllerSchedule {
   static async getAllSchedule(req, res) {
     try {
       const { filterDay, filterRoomId } = req.query;
+
       const startOfDay = moment(filterDay).startOf("day").toDate(); // Awal hari
       const endOfDay = moment(filterDay).endOf("day").toDate(); // Akhir hari
+
       let paramsquery = {
         include: {
           model: Room,
@@ -57,7 +59,8 @@ class ControllerSchedule {
   static async addSchedule(req, res) {
     try {
       const { id } = req.user;
-      const { name, day, startTime, endTime, RoomId, deptName, picName } = req.body;
+      const { name, day, startTime, endTime, RoomId, deptName, picName } =
+        req.body;
 
       const findRoom = await Room.findByPk(RoomId);
       if (!findRoom) throw { name: "RoomNotFound" };
@@ -83,7 +86,6 @@ class ControllerSchedule {
         deptName,
         picName,
       });
-      // const dateOnly = moment(schedule.day).format("MMM Do YY");
       emitSchedule();
       res.status(201).json({
         message: `The schedule for ${schedule.name}, has been successfully created.`,
@@ -109,9 +111,9 @@ class ControllerSchedule {
     try {
       const { day } = req.params;
       const startOfDay = moment(day).startOf("day").toDate();
-      const endOfDay = moment(day).endOf("day").toDate(); 
+      const endOfDay = moment(day).endOf("day").toDate();
       console.log(day, startOfDay, endOfDay, "<<<<<<<<<< ini schedule");
-      
+
       const schedule = await Schedule.findAll({
         include: {
           model: Room,
@@ -128,13 +130,12 @@ class ControllerSchedule {
               day: {
                 [Op.lt]: endOfDay, // Mencari entri yang kurang dari akhir hari
               },
-            }
+            },
           ],
         },
         order: [["startTime", "ASC"]],
       });
-      // console.log(schedule);
-      
+
       res.status(200).json(schedule);
     } catch (error) {
       console.log(error);
@@ -143,7 +144,8 @@ class ControllerSchedule {
   }
   static async updateScheduleById(req, res) {
     const { id } = req.params;
-    const { name, day, startTime, endTime, RoomId, deptName, picName } = req.body;
+    const { name, day, startTime, endTime, RoomId, deptName, picName } =
+      req.body;
     try {
       const findSchedule = await Schedule.findByPk(id);
       if (!findSchedule) throw { name: "ScheduleNotFound" };
@@ -166,7 +168,11 @@ class ControllerSchedule {
         picName,
       });
       emitSchedule();
-      res.status(200).json({ message: `Schedule for ${findSchedule.name} has been updated` });
+      res
+        .status(200)
+        .json({
+          message: `Schedule for ${findSchedule.name} has been updated`,
+        });
     } catch (error) {
       console.log(error);
       if (error.name === "ScheduleNotFound") {
@@ -204,7 +210,9 @@ class ControllerSchedule {
       if (!schedule) throw { name: "ScheduleNotFound" };
       await schedule.destroy();
       emitSchedule();
-      res.status(200).json({ message: `Schedule for ${schedule.name} has been deleted` });
+      res
+        .status(200)
+        .json({ message: `Schedule for ${schedule.name} has been deleted` });
     } catch (error) {
       console.log(error);
       if (error.name === "ScheduleNotFound") {
@@ -215,6 +223,5 @@ class ControllerSchedule {
     }
   }
 }
-
 
 module.exports = ControllerSchedule;

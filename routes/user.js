@@ -6,7 +6,7 @@ const User = express.Router();
 
 
 User.get("/", ControllerUser.GetAllUser);
-User.post("/", Authentication, AuthSuperAdmin, ControllerUser.AddUser);
+User.post("/", ControllerUser.AddUser);
 User.delete("/:id", Authentication, AuthSuperAdmin, ControllerUser.DeleteUser);
 
 module.exports = User;

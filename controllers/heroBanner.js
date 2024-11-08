@@ -7,9 +7,11 @@ class ControllerHeroBanner {
     try {
       const { title, description, startTime, endTime } = req.body;
       if (!req.files) throw { name: "FileIsEmpty" };
+
       const file = req.files.fileHero;
-      console.log(file);
       if (!file) throw { name: "FileIsEmpty" };
+      console.log(file);
+
       const newFile = await File.create({
         fileName: file.name,
         fileType: file.mimetype,
@@ -22,6 +24,7 @@ class ControllerHeroBanner {
         endTime,
         fileHero: newFile.id,
       });
+
       emitBanner();
       res.status(201).json({ message: "Hero Banner created" });
     } catch (error) {
@@ -73,13 +76,6 @@ class ControllerHeroBanner {
     try {
       const { date } = req.params;
       const parsedDate = new Date(date) 
-      // console.log(parsedDate.toISOString(), "<<<<<<<<<<");
-      
-      console.log(parsedDate, "<<<<<<<<<< ini banner");
-      console.log(date, "<<<<<<<<<<");
-      // console.log(moment(date).startOf("day").toDate());
-      
-      
       
       const heroBanner = await HeroBanner.findAll({
         where: {

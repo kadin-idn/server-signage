@@ -3,7 +3,7 @@
  * npx sequelize-cli model:generate --name Room --attributes name:string
  * npx sequelize-cli model:generate --name File --attributes fileName:string,fileType:string,data:blob
  * npx sequelize-cli model:generate --name heroBanner --attributes fileHero:uuid,title:string,description:string,startTime:date,endTime:date,deptName:string,picName:string
- * npx sequelize-cli model:generate --name User --attributes RoleId:uuid,name:string,email:string
+ * npx sequelize-cli model:generate --name User --attributes RoleId:uuid,name:string,email:string,password:string
  * npx sequelize-cli model:generate --name Schedule --attributes day:string,startTime:date,endTime:date,status:string,RoomId:uuid,UpdatedBy:uuid,CreatedBy:uuid
  */
 
