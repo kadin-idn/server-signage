@@ -6,7 +6,7 @@ class ControllerUser {
   static async AddUser(req, res) {
     try {
       const { name, email, RoleId, password } = req.body;
-      if (!name || !email) throw { name: "Email/NameIsRequired" };
+      if (!name || !email || !password) throw { name: "Email/Name/PasswordIsRequired" };
       
       const findRole = await Role.findByPk(RoleId);
       if (!findRole) throw { name: "RoleNotFound" };
@@ -18,8 +18,8 @@ class ControllerUser {
       res.status(201).json({ message: `User ${user.name} has been created` });
     } catch (error) {
       console.log(error);
-      if (error.name === "Email/NameIsRequired") {
-        res.status(400).json({ message: "Email/Name is required" });
+      if (error.name === "Email/Name/PasswordIsRequired") {
+        res.status(400).json({ message: "Email/Name/Password is required" });
       } else if (error.name === "EmailAlreadyExist") {
         res.status(400).json({ message: "Email Already Exist" });
       } else if(error.name === "RoleNotFound") {
